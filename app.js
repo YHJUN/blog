@@ -6,9 +6,10 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 
-const index = require('./routes/index')
-const users = require('./routes/users')
 
+const index = require('./src/routes/index')
+const users = require('./src/routes/users')
+const errorViewRouter = require('./src/routes/view/error')
 // error handler
 onerror(app)
 
@@ -18,24 +19,18 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))
+app.use(require('koa-static')(__dirname + '/src/public'))
 
-app.use(views(__dirname + '/views', {
+app.use(views(__dirname + '/src/views', {
   extension: 'ejs'
 }))
 
-// logger
-// app.use(async (ctx, next) => {
-//   const start = new Date()
-//   await next()
-//   const ms = new Date() - start
-//   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-// })
 
-// routes
+
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
 
+app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)

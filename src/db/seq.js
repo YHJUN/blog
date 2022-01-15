@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
-const conf = {
+const seq = new Sequelize('koa2_weibo','root','yhj19921225',{ 
     host:'localhost',
     dialect:'mysql'
-}
-const seq = new Sequelize('blog','root','yhj19921225',conf)
-module.exports=seq
+})
+
+module.exports  =seq  
